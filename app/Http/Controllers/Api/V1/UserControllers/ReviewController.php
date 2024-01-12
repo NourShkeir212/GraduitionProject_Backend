@@ -26,6 +26,7 @@ class ReviewController extends Controller
             'comment' => $request->comment,
             'rate' => $request->rate,
             'date' => $request->date,
+            'task_id' => $request->task_id,
         ]);
 
         return $this->success(new ReviewResource($review), 'Review submitted successfully!', 201);

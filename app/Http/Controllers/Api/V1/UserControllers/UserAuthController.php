@@ -50,6 +50,8 @@ class UserAuthController extends Controller
         }
         $user = User::where('email', $request->email)->first();
 
+        $user->tokens()->delete();
+
         return $this->success(
             [
                 'user' => $user,
@@ -58,9 +60,26 @@ class UserAuthController extends Controller
     }
 
 
-    public function logout()
+    public function logoutCurrentDevice()
     {
-        Auth::user()->currentAccessToken()->delete();
-        return $this->success('', 'Successfully Logout');
+        // Get the currently authenticated user
+        $user = Auth::user();
+
+        // Delete the token for the current session
+        $user->currentAccessToken()->delete();
+
+        return $this->success('', 'Successfully logged out from this device');
     }
+
+    public function logoutAllDevices()
+    {
+        // Get the currently authenticated user
+        $user = Auth::user();
+
+        // Delete all tokens for the user
+        $user->tokens()->delete();
+
+        return $this->success('', 'Successfully logged out from all devices');
+    }
+
 }

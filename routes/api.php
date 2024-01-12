@@ -34,7 +34,8 @@ Route::prefix('auth/user')->group(function () {
     Route::post('/login', [UserAuthController::class, 'login']);
 
     Route::group(['middleware' => ['auth:sanctum:user']], function () {
-        Route::get('/logout', [UserAuthController::class, 'logout']);
+        Route::get('/logout_current_session', [UserAuthController::class, 'logoutCurrentDevice']);
+        Route::get('/logout_all_sessions', [UserAuthController::class, 'logoutAllDevices']);
     });
 });
 
@@ -45,6 +46,8 @@ Route::prefix('auth/worker')->group(function () {
 
     Route::group(['middleware' => ['auth:sanctum:worker']], function () {
         Route::get('/logout', [WorkerAuthController::class, 'logout']);
+        Route::get('/logout_current_session', [WorkerAuthController::class, 'logoutCurrentDevice']);
+        Route::get('/logout_all_sessions', [WorkerAuthController::class, 'logoutAllDevices']);
     });
 });
 
@@ -85,10 +88,14 @@ Route::prefix('user')->group(function () {
         //category
         Route::get('/get_categories', [CategoryController::class, 'getCategory']);
         Route::get('/categories/{id}/workers', [CategoryController::class, 'getWorkersFromCategory']);
+        Route::get('/popular-categories', [CategoryController::class, 'getPopularCategories']);
 
         //search
-        Route::get('/workers/search', [Searchcontroller::class, 'search']);
+        Route::post('/workers/search', [Searchcontroller::class, 'search']);
 
+        //get top-rated
+
+        Route::get('/top-rated-workers', [WorkerController::class, 'getTopRatedWorkers']);
         //worker profile
         Route::get('/worker/get_profile/{id}', [WorkerController::class, 'getWorkerProfileForUser']);
 

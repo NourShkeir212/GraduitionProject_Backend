@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateWorkerRequest;
 use App\Http\Resources\ReviewResource;
+use App\Http\Resources\TopRatedWorkersResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\WorkerResource;
 use App\Models\User;
@@ -35,20 +36,6 @@ class WorkerController extends Controller
             ]
         );
 
-    }
-
-    public function getWorkerProfileForUser($id)
-    {
-        $AuthWorker = Worker::findOrFail($id);
-        $workerProfile = Worker::with('workerProfileImage')->find($AuthWorker->id);
-
-        return response()->json(
-            [
-                'status' => 'success',
-                'message' => 'Worker profile',
-                'data' => new WorkerResource($workerProfile),
-            ]
-        );
     }
 
     public function updateProfile(UpdateWorkerRequest $request)
@@ -114,5 +101,30 @@ class WorkerController extends Controller
             return response()->json(['message' => 'Make sure of your old password'], 400);
         }
     }
+
+
+    public function getWorkerProfileForUser($id)
+    {
+        $AuthWorker = Worker::findOrFail($id);
+        $workerProfile = Worker::with('workerProfileImage')->find($AuthWorker->id);
+
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Worker profile',
+                'data' => new WorkerResource($workerProfile),
+            ]
+        );
+    }
+
+    public function getTopRatedWorkers()
+    {
+        $workers = Worker::orderBy('rating_average', 'desc')
+            ->take(5)
+            ->get();
+
+        return TopRatedWorkersResource::collection($workers);
+    }
+
 
 }

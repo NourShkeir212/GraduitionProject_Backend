@@ -29,6 +29,7 @@ class UploadReviewRequest extends FormRequest
             'worker_id' => 'required|exists:workers,id',
             'rate' => 'required|numeric|min:0|max:5',
             'comment' => 'required|string',
+            'task_id' => 'required'
         ];
     }
 

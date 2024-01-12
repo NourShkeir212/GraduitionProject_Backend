@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
     use HasFactory;
+ //   use SoftDeletes;
 
     protected $fillable = [
         'date',
@@ -17,7 +19,10 @@ class Task extends Model
         'complete_task',
         'user_id',
         'worker_id',
-        'status'
+        'status',
+        'deleted_by_worker',
+        'deleted_by_user',
+
     ];
 
     public function user()
@@ -28,5 +33,11 @@ class Task extends Model
     public function worker()
     {
         return $this->belongsTo(Worker::class);
+    }
+
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

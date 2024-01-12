@@ -21,8 +21,10 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->text('description');
-            $table->enum('status',['pending','accepted','declined'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'declined'])->default('pending');
             $table->enum('complete_task', ['complete', 'not_complete']);
+            $table->boolean('deleted_by_user')->default(false);
+            $table->boolean('deleted_by_worker')->default(false);
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('worker_id')->references('id')->on('workers')->cascadeOnDelete();
             $table->timestamps();

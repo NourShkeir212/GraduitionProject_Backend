@@ -52,6 +52,9 @@ class WorkerAvailability implements Rule
 // The helper functions remain the same
 
 
+
+
+
 // Helper function to check if the worker is available
     private function isWorkerAvailable($worker)
     {
@@ -75,6 +78,8 @@ class WorkerAvailability implements Rule
     private function isOverlappingWithExistingTask($worker)
     {
         $overlappingTask = Task::where('worker_id', $worker->id)
+            ->where('deleted_by_user',false)
+            ->where('deleted_by_worker',false)
             ->where('date', $this->date)
             ->where(function ($query) {
                 $query->where('start_time', '<', $this->end_time)
@@ -93,6 +98,8 @@ class WorkerAvailability implements Rule
         $totalWorkingTime = $workerEndTime->diffInMinutes($workerStartTime);
 
         $totalTaskTime = Task::where('worker_id', $worker->id)
+            ->where('deleted_by_user',false)
+            ->where('deleted_by_worker',false)
             ->where('date', $this->date)
             ->get()
             ->sum(function ($task) {

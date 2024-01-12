@@ -24,7 +24,8 @@ class ReviewFactory extends Factory
             //  'rate' => $this->faker->randomFloat(2, 0, 5),
             'rate' => $this->faker->randomElement([1, 2, 3, 4, 5]),
             'comment' => $this->faker->text,
-            'date' => '2023-12-31 02:20:00'
+            'date' => '2023-12-31 02:20:00',
+            'reviewed'=>false
         ];
     }
 }
