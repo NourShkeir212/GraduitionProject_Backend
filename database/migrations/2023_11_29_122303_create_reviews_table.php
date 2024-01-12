@@ -17,11 +17,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('worker_id');
+            $table->unsignedBigInteger('task_id');
             $table->integer('rate')->default(0);
             $table->text('comment');
             $table->timestamp('date');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('worker_id')->references('id')->on('workers')->cascadeOnDelete();
+            $table->foreign('task_id')->references('id')->on('tasks')->cascadeOnDelete();
             $table->timestamps();
         });
     }

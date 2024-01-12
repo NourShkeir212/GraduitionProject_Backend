@@ -35,5 +35,23 @@ class CategoryController extends Controller
             return $this->error('', 'Category not found', 404);
         }
     }
+
+    public function getPopularCategories()
+    {
+        $categories = Category::withCount('workers')
+            ->orderBy('workers_count', 'desc')
+            ->take(4)
+            ->get();
+
+        // If no category has a worker, get 4 random categories
+        if ($categories->isEmpty() || $categories->first()->workers_count == 0) {
+            $categories = Category::take(4)->get();
+
+        }
+
+        return CategoryResource::collection($categories);
+    }
+
+
 }
 

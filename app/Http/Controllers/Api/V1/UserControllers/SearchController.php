@@ -11,7 +11,12 @@ class SearchController extends Controller
 {
     public function search(Request $request)
     {
+        
         $workers = Worker::query();
+
+        if ($request->has('name')) {
+            $workers->where('name', 'like', '%' . $request->name . '%');
+        }
 
         if ($request->has('category')) {
             $workers->category($request->category);

@@ -14,7 +14,8 @@ class Review extends Model
         'comment',
         'user_id',
         'worker_id',
-        'date'
+        'date',
+        'task_id'
     ];
 
     public function user()

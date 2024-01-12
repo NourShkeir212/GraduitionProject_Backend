@@ -23,6 +23,7 @@ class TaskResource extends JsonResource
                 'description' => $this->description,
                 'status' => $this->status,
                 'complete_task' => $this->complete_task,
+                'reviewed' => $this->reviews()->where('user_id', auth()->id())->exists(),
             ],
             'user' => [
                 'id' => $this->user->id,

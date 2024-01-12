@@ -37,11 +37,17 @@ class TaskController extends Controller
             return response()->json(['error' => 'Task not found.'], 404);
         }
 
-        if ($task->status !== 'pending') {
+        if ($task->status !== 'pending' && $task->status !== 'declined') {
             return response()->json(['error' => 'You can only delete tasks that are still pending.'], 403);
         }
+        
+        if ($task->status == 'pending') {
+            $task->delete();
+            return response()->json(['message' => 'Task deleted successfully.']);
+        }
 
-        $task->delete();
+        $task->deleted_by_user = true;
+        $task->save();
 
         return response()->json(['message' => 'Task deleted successfully.']);
 
@@ -80,7 +86,12 @@ class TaskController extends Controller
             return response()->json(['message' => 'Task cannot be declined because it is not pending'], 400);
         }
 
-        $task->update(['status' => 'declined']);
+        $task->update(
+            [
+                'status' => 'declined',
+                'deleted_by_worker' => true
+            ]
+        );
 
 
         return response()->json(['message' => 'Task declined']);
@@ -89,7 +100,10 @@ class TaskController extends Controller
     //get tasks for worker app
     public function getTasks()
     {
-        $tasks = Auth::user()->tasks;
+        $workerId = Auth::user()->id;
+        $tasks = Task::where('worker_id', $workerId)
+            ->where('deleted_by_worker', false)
+            ->get();
 
         return $this->success(TaskResource::collection($tasks), 'Success');
     }
@@ -97,7 +111,10 @@ class TaskController extends Controller
     // get tasks for users app
     public function getUserTasks()
     {
-        $tasks = Auth::user()->tasks;
+        $userId = Auth::user()->id;
+        $tasks = Task::where('user_id', $userId)
+            ->where('deleted_by_user', false)
+            ->get();
 
         return $this->success(TaskUserResource::collection($tasks), 'Success');
     }
